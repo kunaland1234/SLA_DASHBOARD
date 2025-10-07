@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import database
 import utils
 import styling
@@ -69,6 +69,12 @@ html[data-theme="dark"] .main-header {
 }
 </style>
 """, unsafe_allow_html=True)
+
+def get_ist_time():
+    """Get current time in IST (UTC+5:30)"""
+    utc_time = datetime.now(timezone.utc)
+    ist_time = utc_time + timedelta(hours=5, minutes=30)
+    return ist_time.strftime("%d-%m-%Y %H:%M:%S")
 
 # Cache data loading with error handling
 @st.cache_data(ttl=300, show_spinner=False)
@@ -206,11 +212,11 @@ def main():
     st.markdown('<h1 class="main-header">📊 SLA Performance Dashboard</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-header">Real-time SLA Monitoring & Analytics</p>', unsafe_allow_html=True)
 
-    # Current time - ALWAYS get fresh timestamp
-    current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+    # Current time in IST - ALWAYS get fresh timestamp
+    current_time = get_ist_time()
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.info(f"🕐 **Last Updated:** {current_time}")
+        st.info(f"🕐 **Last Updated:** {current_time} IST")
 
     # Database connection test
     with st.expander("🔌 Database Connection Status", expanded=False):
