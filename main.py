@@ -72,11 +72,11 @@ html[data-theme="dark"] .main-header {
 
 # Cache data loading with error handling
 @st.cache_data(ttl=300, show_spinner=False)
-def load_all_data(_target_dates):
+def load_all_data(target_dates):  # Remove the underscore prefix
     """Cache data for 5 minutes with error handling"""
     try:
-        sla_data = database.get_all_dates_data(_target_dates)
-        alarms_data = database.get_alarms_data(_target_dates)
+        sla_data = database.get_all_dates_data(target_dates)
+        alarms_data = database.get_alarms_data(target_dates)
         return {'sla_data': sla_data, 'alarms_data': alarms_data}
     except Exception as e:
         st.error(f"❌ Error loading data: {str(e)}")
@@ -270,4 +270,5 @@ def main():
     st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
+
     main()
