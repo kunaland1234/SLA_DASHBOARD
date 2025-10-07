@@ -1,9 +1,13 @@
 import pandas as pd
-import mysql.connector
+try:
+    import mysql.connector
+except ImportError:
+    # Fallback for Streamlit Cloud
+    import pymysql as mysql
 from datetime import datetime, timedelta
 import streamlit as st
 
-# Fixed meters list
+# Fixed meters list (keep exactly as is)
 FIXED_METERS = [
     {'meter_number': 'AS3313009', 'type': '4G'},
     {'meter_number': 'AS3313010', 'type': '4G'},
@@ -40,7 +44,7 @@ def get_db_connection():
         st.error(f"❌ Connection failed: {str(e)}")
         return None
 
-# Rest of your functions remain exactly the same...
+# Rest of your database.py code remains EXACTLY THE SAME...
 def test_db_connection():
     """Test database connection"""
     conn = get_db_connection()
