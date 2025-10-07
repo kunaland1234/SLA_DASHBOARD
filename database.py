@@ -173,7 +173,7 @@ def get_all_dates_data(target_dates):
         FROM sense_hes_demo.amr_load_data
         WHERE meter_number IN ({meter_placeholders})
             AND DATE(DATETIME_SLOT) IN ({date_placeholders})
-            AND ({server_time_condition})
+            AND command_code is NULL
         GROUP BY meter_number, DATE(DATETIME_SLOT)
         """
         
@@ -207,7 +207,7 @@ def get_all_dates_data(target_dates):
         FROM sense_hes_demo.amr_midnight_data
         WHERE meter_number IN ({meter_placeholders})
             AND DATE(D6_SNAP_DATETIME) IN ({date_placeholders})
-            AND ({midnight_server_time_condition})
+            AND command_code is NULL
         GROUP BY meter_number, DATE(D6_SNAP_DATETIME)
         """
         
@@ -279,3 +279,4 @@ def get_all_dates_data(target_dates):
         import traceback
         st.error(traceback.format_exc())
         return {}
+
