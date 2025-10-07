@@ -72,11 +72,11 @@ html[data-theme="dark"] .main-header {
 
 # Cache data loading with error handling
 @st.cache_data(ttl=300, show_spinner=False)
-def load_all_data(target_dates):  # Remove the underscore prefix
+def load_all_data(_target_dates):
     """Cache data for 5 minutes with error handling"""
     try:
-        sla_data = database.get_all_dates_data(target_dates)
-        alarms_data = database.get_alarms_data(target_dates)
+        sla_data = database.get_all_dates_data(_target_dates)
+        alarms_data = database.get_alarms_data(_target_dates)
         return {'sla_data': sla_data, 'alarms_data': alarms_data}
     except Exception as e:
         st.error(f"❌ Error loading data: {str(e)}")
@@ -206,7 +206,7 @@ def main():
     st.markdown('<h1 class="main-header">📊 SLA Performance Dashboard</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-header">Real-time SLA Monitoring & Analytics</p>', unsafe_allow_html=True)
 
-    # Current time
+    # Current time - ALWAYS get fresh timestamp
     current_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
@@ -262,13 +262,12 @@ def main():
     with tab3:
         display_tab_content(tab_dates[2], all_data, use_real_data)
 
-    # Refresh button at bottom right
+    # Refresh button at bottom right - WITH CACHE CLEAR
     st.markdown('<div class="refresh-button">', unsafe_allow_html=True)
     if st.button("🔄 Refresh Data", type="primary", use_container_width=True):
-        st.cache_data.clear()
+        st.cache_data.clear()  # CLEAR CACHE ON REFRESH
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
-
     main()
